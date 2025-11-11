@@ -1,0 +1,503 @@
+# Decap CMS Configuration for Hugoplate Theme
+# Complete configuration covering all content types and site settings
+
+backend:
+  name: git-gateway
+  branch: main
+
+local_backend: true
+
+media_folder: "static/images/uploads"
+public_folder: "/images/uploads"
+
+# Publish mode - editorial workflow for content review
+publish_mode: editorial_workflow
+
+# Global slug configuration
+slug:
+  encoding: "ascii"
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  # =====================================================
+  # BLOG POSTS COLLECTION
+  # =====================================================
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "content/english/blog"
+    create: true
+    slug: "{{slug}}"
+    editor:
+      preview: false
+    fields:
+      - { label: "Title", name: "title", widget: "string", required: true }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Publish Date", name: "date", widget: "datetime", required: true }
+      - { label: "Author", name: "author", widget: "relation", collection: "authors", search_fields: ["title"], value_field: "{{slug}}", display_fields: ["title"], required: false }
+      - { label: "Featured Image", name: "image", widget: "image", required: false }
+      - { label: "Categories", name: "categories", widget: "list", required: false, allow_add: true }
+      - { label: "Tags", name: "tags", widget: "list", required: false, allow_add: true }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "Weight", name: "weight", widget: "number", required: false, value_type: "int", hint: "Lower numbers appear first" }
+      - { label: "Custom Slug", name: "slug", widget: "string", required: false, hint: "Custom URL slug (optional)" }
+      - { label: "Table of Contents", name: "toc", widget: "boolean", default: false, required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  # =====================================================
+  # AUTHORS COLLECTION
+  # =====================================================
+  - name: "authors"
+    label: "Authors"
+    folder: "content/english/authors"
+    create: true
+    slug: "{{slug}}"
+    path: "{{slug}}/_index"
+    editor:
+      preview: false
+    fields:
+      - { label: "Author Name", name: "title", widget: "string", required: true }
+      - { label: "Email", name: "email", widget: "string", required: false }
+      - { label: "Profile Image", name: "image", widget: "image", required: false }
+      - { label: "Bio", name: "bio", widget: "text", required: false }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - label: "Social Links"
+        name: "social"
+        widget: "object"
+        required: false
+        fields:
+          - { label: "Twitter", name: "twitter", widget: "string", required: false, hint: "Twitter username (without @)" }
+          - { label: "GitHub", name: "github", widget: "string", required: false, hint: "GitHub username" }
+          - { label: "LinkedIn", name: "linkedin", widget: "string", required: false, hint: "LinkedIn profile URL" }
+          - { label: "Website", name: "website", widget: "string", required: false, hint: "Personal website URL" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "Body", name: "body", widget: "markdown", required: false }
+
+  # =====================================================
+  # STATIC PAGES COLLECTION
+  # =====================================================
+  - name: "pages"
+    label: "Pages"
+    folder: "content/english"
+    create: true
+    slug: "{{slug}}"
+    path: "{{slug}}/_index"
+    editor:
+      preview: false
+    filter:
+      field: "type"
+      value: "page"
+    fields:
+      - { label: "Title", name: "title", widget: "string", required: true }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Image", name: "image", widget: "image", required: false }
+      - { label: "Layout", name: "layout", widget: "string", required: false, hint: "Custom layout template name" }
+      - { label: "Type", name: "type", widget: "hidden", default: "page" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  # =====================================================
+  # HOMEPAGE CONFIGURATION
+  # =====================================================
+  - name: "homepage"
+    label: "Homepage"
+    files:
+      - label: "Homepage Content"
+        name: "home"
+        file: "content/english/_index.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string", required: false }
+          - label: "Banner Section"
+            name: "banner"
+            widget: "object"
+            fields:
+              - { label: "Banner Title", name: "title", widget: "string" }
+              - { label: "Banner Content", name: "content", widget: "text" }
+              - { label: "Banner Image", name: "image", widget: "image" }
+              - label: "Button"
+                name: "button"
+                widget: "object"
+                fields:
+                  - { label: "Enable Button", name: "enable", widget: "boolean", default: true }
+                  - { label: "Button Label", name: "label", widget: "string" }
+                  - { label: "Button Link", name: "link", widget: "string" }
+          - label: "Features"
+            name: "features"
+            widget: "list"
+            fields:
+              - { label: "Feature Title", name: "title", widget: "string" }
+              - { label: "Feature Image", name: "image", widget: "image" }
+              - { label: "Feature Content", name: "content", widget: "text" }
+              - label: "Bullet Points"
+                name: "bulletpoints"
+                widget: "list"
+                field: { label: "Point", name: "point", widget: "string" }
+                required: false
+              - label: "Button"
+                name: "button"
+                widget: "object"
+                required: false
+                fields:
+                  - { label: "Enable Button", name: "enable", widget: "boolean", default: true }
+                  - { label: "Button Label", name: "label", widget: "string" }
+                  - { label: "Button Link", name: "link", widget: "string" }
+
+  # =====================================================
+  # ABOUT PAGE
+  # =====================================================
+  - name: "about"
+    label: "About Page"
+    files:
+      - label: "About Page"
+        name: "about"
+        file: "content/english/about/_index.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Description", name: "description", widget: "text", required: false }
+          - { label: "Image", name: "image", widget: "image", required: false }
+          - { label: "Draft", name: "draft", widget: "boolean", default: false }
+          - { label: "Body", name: "body", widget: "markdown" }
+
+  # =====================================================
+  # CONTACT PAGE
+  # =====================================================
+  - name: "contact"
+    label: "Contact Page"
+    files:
+      - label: "Contact Page"
+        name: "contact"
+        file: "content/english/contact/_index.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Description", name: "description", widget: "text", required: false }
+          - { label: "Draft", name: "draft", widget: "boolean", default: false }
+          - { label: "Body", name: "body", widget: "markdown" }
+
+  # =====================================================
+  # PRIVACY POLICY PAGE
+  # =====================================================
+  - name: "privacy"
+    label: "Privacy Policy"
+    files:
+      - label: "Privacy Policy"
+        name: "privacy"
+        file: "content/english/privacy-policy/_index.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Description", name: "description", widget: "text", required: false }
+          - { label: "Draft", name: "draft", widget: "boolean", default: false }
+          - { label: "Body", name: "body", widget: "markdown" }
+
+  # =====================================================
+  # SITE CONFIGURATION - PARAMS
+  # =====================================================
+  - name: "settings"
+    label: "Site Settings"
+    files:
+      - label: "Site Parameters"
+        name: "params"
+        file: "exampleSite/config/_default/params.toml"
+        fields:
+          # Logo & Branding
+          - label: "Logo & Branding"
+            name: "logo_section"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Favicon", name: "favicon", widget: "image", default: "images/favicon.png" }
+              - { label: "Logo", name: "logo", widget: "image", default: "images/logo.png" }
+              - { label: "Logo Dark Mode", name: "logo_darkmode", widget: "image", default: "images/logo-darkmode.png" }
+              - { label: "Logo Width", name: "logo_width", widget: "string", default: "160px", hint: "Use px or x with logo_width" }
+              - { label: "Logo Height", name: "logo_height", widget: "string", default: "32px" }
+              - { label: "Logo WebP", name: "logo_webp", widget: "boolean", default: true, hint: "Generate WEBP version of logo" }
+              - { label: "Logo Text", name: "logo_text", widget: "string", default: "Hugoplate", hint: "Fallback text when logo is missing" }
+          
+          # Navigation
+          - label: "Navigation"
+            name: "navigation"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Fixed Navbar", name: "navbar_fixed", widget: "boolean", default: true }
+              - label: "Navigation Button"
+                name: "navigation_button"
+                widget: "object"
+                fields:
+                  - { label: "Enable", name: "enable", widget: "boolean", default: true }
+                  - { label: "Label", name: "label", widget: "string" }
+                  - { label: "Link", name: "link", widget: "string" }
+          
+          # Theme Mode
+          - label: "Theme Settings"
+            name: "theme_settings"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Theme Switcher", name: "theme_switcher", widget: "boolean", default: true }
+              - label: "Default Theme"
+                name: "theme_default"
+                widget: "select"
+                options: ["light", "dark", "system"]
+                default: "system"
+          
+          # Main Sections
+          - label: "Main Sections"
+            name: "mainSections"
+            widget: "list"
+            default: ["blog"]
+            hint: "Main content sections"
+          
+          # Contact Form
+          - { label: "Contact Form Action", name: "contact_form_action", widget: "string", default: "#", hint: "Works with airform.io or formspree.io" }
+          
+          # Analytics
+          - label: "Analytics"
+            name: "analytics"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Google Tag Manager", name: "google_tag_manager", widget: "string", required: false, hint: "Example: G-XXXXXXXXXX" }
+              - { label: "Google AdSense", name: "google_adsense", widget: "string", required: false, hint: "Example: ca-pub-xxxxxxxxxxxxxxxx" }
+          
+          # Custom Script
+          - { label: "Custom Script", name: "custom_script", widget: "text", required: false, hint: "Custom HTML/JavaScript for header" }
+          
+          # Copyright
+          - { label: "Copyright", name: "copyright", widget: "string", default: "Designed & Developed by Zeon Studio" }
+          
+          # Preloader
+          - label: "Preloader"
+            name: "preloader"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Enable", name: "enable", widget: "boolean", default: false }
+              - { label: "Preloader Image", name: "preloader", widget: "image", required: false, hint: "Use jpg, png, svg or gif format" }
+          
+          # Search
+          - label: "Search"
+            name: "search"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Enable", name: "enable", widget: "boolean", default: true }
+              - { label: "Primary Color", name: "primary_color", widget: "string", default: "#121212" }
+              - label: "Include Sections"
+                name: "include_sections"
+                widget: "list"
+                default: ["blog"]
+              - { label: "Show Image", name: "show_image", widget: "boolean", default: true }
+              - { label: "Show Description", name: "show_description", widget: "boolean", default: true }
+              - { label: "Show Tags", name: "show_tags", widget: "boolean", default: true }
+              - { label: "Show Categories", name: "show_categories", widget: "boolean", default: true }
+          
+          # Announcement
+          - label: "Announcement Banner"
+            name: "announcement"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Enable", name: "enable", widget: "boolean", default: false }
+              - { label: "Expire Days", name: "expire_days", widget: "number", default: 7, value_type: "int" }
+              - { label: "Content", name: "content", widget: "text" }
+          
+          # SEO Metadata
+          - label: "SEO Metadata"
+            name: "metadata"
+            widget: "object"
+            collapsed: true
+            fields:
+              - label: "Keywords"
+                name: "keywords"
+                widget: "list"
+                default: ["Boilerplate", "Hugo"]
+              - { label: "Description", name: "description", widget: "text" }
+              - { label: "Author", name: "author", widget: "string" }
+              - { label: "Twitter Handle", name: "twitter", widget: "string", hint: "Twitter username" }
+              - { label: "OG Image", name: "image", widget: "image", default: "images/og-image.png" }
+          
+          # Site Verification
+          - label: "Site Verification"
+            name: "site_verification"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Google", name: "google", widget: "string", required: false }
+              - { label: "Bing", name: "bing", widget: "string", required: false }
+              - { label: "Baidu", name: "baidu", widget: "string", required: false }
+              - { label: "Facebook", name: "facebook", widget: "string", required: false }
+              - { label: "Mastodon", name: "mastodon", widget: "string", required: false }
+          
+          # Cookies
+          - label: "Cookie Consent"
+            name: "cookies"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Enable", name: "enable", widget: "boolean", default: false }
+              - { label: "Expire Days", name: "expire_days", widget: "number", default: 60, value_type: "int" }
+              - { label: "Content", name: "content", widget: "text" }
+              - { label: "Button Text", name: "button", widget: "string", default: "I Accept" }
+          
+          # Sidebar Widgets
+          - label: "Widgets"
+            name: "widgets"
+            widget: "object"
+            collapsed: true
+            fields:
+              - label: "Sidebar Widgets"
+                name: "sidebar"
+                widget: "list"
+                default: ["categories", "tags"]
+          
+          # Google Maps
+          - label: "Google Maps"
+            name: "google_map"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Enable", name: "enable", widget: "boolean", default: false }
+              - { label: "Map API Key", name: "map_api_key", widget: "string", required: false }
+              - { label: "Latitude", name: "map_latitude", widget: "string", required: false }
+              - { label: "Longitude", name: "map_longitude", widget: "string", required: false }
+              - { label: "Map Marker", name: "map_marker", widget: "image", required: false }
+
+  # =====================================================
+  # HUGO CONFIGURATION
+  # =====================================================
+  - name: "hugo_config"
+    label: "Hugo Configuration"
+    files:
+      - label: "Hugo Settings"
+        name: "hugo"
+        file: "exampleSite/hugo.toml"
+        fields:
+          - { label: "Base URL", name: "baseURL", widget: "string", hint: "Your site URL, e.g., https://example.com/" }
+          - { label: "Site Title", name: "title", widget: "string" }
+          - { label: "Language Code", name: "languageCode", widget: "string", default: "en-us" }
+          - { label: "Theme", name: "theme", widget: "hidden", default: "hugoplate" }
+
+  # =====================================================
+  # MENU CONFIGURATION
+  # =====================================================
+  - name: "menus"
+    label: "Navigation Menus"
+    files:
+      - label: "Main Menu"
+        name: "menu_main"
+        file: "exampleSite/config/_default/menus.en.toml"
+        fields:
+          - label: "Main Menu Items"
+            name: "main"
+            widget: "list"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "URL", name: "url", widget: "string" }
+              - { label: "Weight", name: "weight", widget: "number", value_type: "int", hint: "Lower numbers appear first" }
+              - { label: "Parent", name: "parent", widget: "string", required: false, hint: "For dropdown menus, enter parent menu name" }
+          - label: "Footer Menu Items"
+            name: "footer"
+            widget: "list"
+            required: false
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "URL", name: "url", widget: "string" }
+              - { label: "Weight", name: "weight", widget: "number", value_type: "int" }
+
+  # =====================================================
+  # THEME STYLING (DATA FILES)
+  # =====================================================
+  - name: "theme_data"
+    label: "Theme Styling"
+    files:
+      - label: "Theme Colors & Fonts"
+        name: "theme"
+        file: "exampleSite/data/theme.json"
+        fields:
+          - label: "Colors"
+            name: "colors"
+            widget: "object"
+            required: false
+            fields:
+              - { label: "Primary Color", name: "primary", widget: "string", required: false, hint: "Hex color code, e.g., #121212" }
+              - { label: "Secondary Color", name: "secondary", widget: "string", required: false, hint: "Hex color code" }
+              - { label: "Body Color", name: "body", widget: "string", required: false }
+              - { label: "Border Color", name: "border", widget: "string", required: false }
+              - { label: "Theme Light", name: "theme_light", widget: "string", required: false }
+              - { label: "Theme Dark", name: "theme_dark", widget: "string", required: false }
+          - label: "Fonts"
+            name: "fonts"
+            widget: "object"
+            required: false
+            fields:
+              - { label: "Font Family Primary", name: "font_family_primary", widget: "string", required: false }
+              - { label: "Font Family Secondary", name: "font_family_secondary", widget: "string", required: false }
+              - { label: "Font Size", name: "font_size", widget: "string", required: false, hint: "Base font size, e.g., 16px" }
+
+  # =====================================================
+  # SOCIAL MEDIA LINKS (DATA FILES)
+  # =====================================================
+  - name: "social_data"
+    label: "Social Media"
+    files:
+      - label: "Social Links"
+        name: "social"
+        file: "exampleSite/data/social.json"
+        fields:
+          - label: "Social Media Links"
+            name: "social"
+            widget: "list"
+            fields:
+              - { label: "Platform", name: "name", widget: "string", hint: "e.g., Facebook, Twitter, Instagram" }
+              - { label: "Icon", name: "icon", widget: "string", hint: "Icon name (Font Awesome or similar)" }
+              - { label: "Link", name: "link", widget: "string", hint: "Full URL to your profile" }
+
+  # =====================================================
+  # TAXONOMY PAGES
+  # =====================================================
+  - name: "taxonomies"
+    label: "Taxonomies"
+    files:
+      - label: "Categories Page"
+        name: "categories"
+        file: "content/english/categories/_index.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string", default: "Categories" }
+          - { label: "Description", name: "description", widget: "text", required: false }
+          - { label: "Body", name: "body", widget: "markdown", required: false }
+      
+      - label: "Tags Page"
+        name: "tags"
+        file: "content/english/tags/_index.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string", default: "Tags" }
+          - { label: "Description", name: "description", widget: "text", required: false }
+          - { label: "Body", name: "body", widget: "markdown", required: false }
+
+  # =====================================================
+  # BLOG SECTION PAGE
+  # =====================================================
+  - name: "blog_section"
+    label: "Blog Section"
+    files:
+      - label: "Blog List Page"
+        name: "blog_index"
+        file: "content/english/blog/_index.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Description", name: "description", widget: "text", required: false }
+          - { label: "Body", name: "body", widget: "markdown", required: false }
+
+  # =====================================================
+  # AUTHORS SECTION PAGE
+  # =====================================================
+  - name: "authors_section"
+    label: "Authors Section"
+    files:
+      - label: "Authors List Page"
+        name: "authors_index"
+        file: "content/english/authors/_index.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Description", name: "description", widget: "text", required: false }
+          - { label: "Body", name: "body", widget: "markdown", required: false }
