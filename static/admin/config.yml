@@ -2,10 +2,14 @@
 # Complete configuration covering all content types and site settings
 
 backend:
-  name: git-gateway
+  name: github
+  repo: "abdullahvhdl/hugoplate"
   branch: main
+  site_domain: https://hugoplate-lgn.pages.dev/
+  base_url: https://hugoplate-lgn.pages.dev/
+  auth_endpoint: /api/auth
 
-local_backend: true
+#local_backend: true
 
 media_folder: "static/images/uploads"
 public_folder: "/images/uploads"
