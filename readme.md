@@ -191,10 +191,11 @@ npm run build
 
 ### 👉 Deploy Site
 
-We have provided 5 different deploy platform configurations with this template, so you can deploy easily.
+We have provided 6 different deploy platform configurations with this template, so you can deploy easily.
 
 - [Netlify](https://www.netlify.com/)
 - [Vercel](https://vercel.com/)
+- [Cloudflare Pages](https://pages.cloudflare.com/)
 - [Github Actions](https://github.com/features/actions)
 - [Gitlab Ci](https://docs.gitlab.com/ee/ci/)
 - [AWS Amplify](https://aws.amazon.com/amplify/)
